@@ -14,8 +14,18 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     >>> encrypt_caesar("")
     ''
     """
+    alphabet_len = 26
+    shift = shift % alphabet_len
     ciphertext = ""
-    # PUT YOUR CODE HERE
+
+    for l in plaintext:
+        if l.isalpha():
+            pivot = ord("a" if l.islower() else "A")
+            char_shift = (ord(l) - pivot + shift) % alphabet_len
+            ciphertext += chr(char_shift + pivot)
+        else:
+            ciphertext += l
+
     return ciphertext
 
 
@@ -32,15 +42,26 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     >>> decrypt_caesar("")
     ''
     """
-    plaintext = ""
-    # PUT YOUR CODE HERE
+    plaintext = encrypt_caesar(ciphertext, -shift)
     return plaintext
 
 
 def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
     """
     Brute force breaking a Caesar cipher.
+
+    >>> d = {"python", "java", "ruby"}
+    >>> caesar_breaker_brute_force("python", d)
+    0
+    >>> caesar_breaker_brute_force("sbwkrq", d)
+    3
     """
     best_shift = 0
-    # PUT YOUR CODE HERE
+    alphabet_len = 26
+
+    for i in range(alphabet_len + 1):
+        if decrypt_caesar(ciphertext, i) in dictionary:
+            best_shift = i
+            break
+
     return best_shift
